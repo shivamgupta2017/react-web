@@ -1,1 +1,16 @@
 // Here you can add other styles
+.modal-search-card {
+  border: 1px solid #e8e0e0;
+  position: absolute; 
+  max-height: 200px; 
+  overflow: auto;
+}
+
+.modal-search-card button:hover {
+  background-color: #007bff;
+}
+
+tr .delete-row-td {
+  cursor: pointer;
+  color: red;
+}
