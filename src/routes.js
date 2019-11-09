@@ -22,7 +22,8 @@ import React from 'react';
 // const ButtonGroups = React.lazy(() => import('./views/Buttons/ButtonGroups'));
 // const Buttons = React.lazy(() => import('./views/Buttons/Buttons'));
 // const Charts = React.lazy(() => import('./views/Charts'));
-const Dashboard = React.lazy(() => import('./views/Dashboard'));
+// const Dashboard = React.lazy(() => import('./views/Dashboard'));
+const ContributionDashboard = React.lazy(() => import('./views/Contribution-Dashboard'));
 const Contribution = React.lazy(() => import('./views/Contribution'));
 
 // const CoreUIIcons = React.lazy(() => import('./views/Icons/CoreUIIcons'));
@@ -41,8 +42,10 @@ const Contribution = React.lazy(() => import('./views/Contribution'));
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/contribution', name: 'Contribution', component: Contribution },
+  // { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+  { path: '/dashboard', name: 'Contribution-Dashboard', component: ContributionDashboard },
+  { path: '/contribution', name: 'Contribution', component: Contribution, exact:true},
+  { path:  '/contribution/:contributionId', name: 'Contribution', component: Contribution, exact:true },
   // { path: '/theme', exact: true, name: 'Theme', component: Colors },
   // { path: '/theme/colors', name: 'Colors', component: Colors },
   // { path: '/theme/typography', name: 'Typography', component: Typography },

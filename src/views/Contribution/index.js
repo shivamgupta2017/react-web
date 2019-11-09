@@ -43,11 +43,47 @@ class Forms extends Component {
       contribution: {
         description: '',
         amount: 0,
-        id: null
+        id: null,
+        contributorsList: []
       },
       isModalOpen: false
     };
     // console.log('state ', this.state);
+  }
+
+  async componentDidMount() {
+
+    const contributionId = +this.props.match.params.contributionId;
+    if (contributionId) {
+
+      this.setState((oldState) => ({
+        contribution: {
+          ...oldState.contribution,
+          id: contributionId
+        }
+      }));
+
+      const contributionDetailsResponse = await this.contriubtionService.getContributionDetails(contributionId);
+
+      if (contributionDetailsResponse.status === 401) {
+        this.props.history.push('/login/');
+      }
+      const jsonResponse = await contributionDetailsResponse.json();
+      if (!jsonResponse.data.success) {
+        alert('success false');
+      }
+
+      const contributionDetails = jsonResponse.data.contributionDetail[0];
+      this.setState({
+        contribution: {
+          id: contributionDetails.id,
+          amount: contributionDetails.amount,
+          description: contributionDetails.description
+        }
+      });
+
+    }
+
   }
 
   render() {
@@ -62,6 +98,12 @@ class Forms extends Component {
                 <CardHeader>
                   <strong>Contribution</strong>
                   <small>Form</small>
+
+
+                  {this.state.contribution.id ? <Button className="pull-right" type="button" color="primary"
+                    onClick={this.manageContributors.bind(this)}>contributors</Button> : ''
+                  }
+
                 </CardHeader>
                 <CardBody>
                   <FormGroup>
@@ -85,9 +127,9 @@ class Forms extends Component {
           </Row>
 
         </Form>
-        {/* this.state.isModalOpen */}
+
         <ContributionAddEditModal isModalOpen={this.state.isModalOpen} toggle={() => this.toggle()}
-          activatedContribution={this.state.contribution}
+          activatedContribution={this.state.contribution} history={this.props.history}
         >
 
         </ContributionAddEditModal>
@@ -108,17 +150,23 @@ class Forms extends Component {
   async handleSubmit(event) {
     event.preventDefault();
 
-    const response = await this.contriubtionService.postContribution(this.state.contribution);
+    let response;
+
+    if (this.state.contribution.id) {
+      response = await this.contriubtionService.putContribution(this.state.contribution);
+    } else {
+      response = await this.contriubtionService.postContribution(this.state.contribution);
+    }
+
     if (!this.commonService.filterResponseByCode(response.status)) {
       this.props.history.push('/login');
     }
     const jsonResponse = await response.json();
     if (jsonResponse.success) {
       // open popup for sharing persons name ammendments
-      this.setState((state) => (
-        {
-          ...state, contribution: jsonResponse.insertResponse
-        }
+      this.setState((state) => ({
+        ...state, contribution: jsonResponse.insertResponse
+      }
       ))
       this.toggle();
     }
@@ -131,6 +179,10 @@ class Forms extends Component {
       ...state,
       isModalOpen: !state.isModalOpen
     }));
+  }
+
+  manageContributors() {
+    this.toggle();
   }
 
 }

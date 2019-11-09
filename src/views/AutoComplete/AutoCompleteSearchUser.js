@@ -74,8 +74,8 @@ export default class AutoCompleteSearchUser extends Component {
       const response = await this.userSearch.doSearchUsers(e.target.value);
 
       if (response.status === 401) {
-        // this.props.history.push('/login');
-        console.log(',', this.props);
+        this.props.history.push('/login/');
+        // console.log(',', this.props);
         return;
       } else {
 

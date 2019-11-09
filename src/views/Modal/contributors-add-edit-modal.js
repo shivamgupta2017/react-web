@@ -4,7 +4,6 @@ import AutoCompleteSearchUser from '../../views/AutoComplete/AutoCompleteSearchU
 import { Card, CardBody, Table } from 'reactstrap'
 import ContributorService from '../../services/Contributor.service';
 
-
 class ContributionAddEditModal extends Component {
   constructor(props) {
     super(props);
@@ -14,13 +13,17 @@ class ContributionAddEditModal extends Component {
   }
 
 
+  componentDidMount() {
+  }
   render() {
 
     return (
       <Modal isOpen={this.props.isModalOpen} backdrop={true} toggle={() => this.props.toggle()}>
         <ModalBody>
 
-          <AutoCompleteSearchUser selectUserDropdown={(userId, userEmail) => (this.selectUserDropdown(userId, userEmail))}></AutoCompleteSearchUser>
+          <AutoCompleteSearchUser selectUserDropdown={(userId, userEmail) => (this.selectUserDropdown(userId, userEmail))}
+            history={this.props.history}>
+            </AutoCompleteSearchUser>
 
           <Card>
             <CardBody>
@@ -60,7 +63,8 @@ class ContributionAddEditModal extends Component {
     });
 
     if (addContributorsResponse.status === 401) {
-      // reroute to login page.
+      this.props.history.push('/login/');
+
       return;
     } else {
       this.props.toggle()
